@@ -63,95 +63,140 @@ if ( ! class_exists( 'Kirki_Customizer_Scripts_PostMessage' ) ) {
 				if ( ! is_array( $args['js_vars'] ) || empty( $args['js_vars'] ) ) {
 					return;
 				}
-				/**
-				 * Start looping through all the "js_vars" items in the array.
-				 * Documentation on how to use the "js_vars" argument and its syntax
-				 * can be found on https://github.com/aristath/kirki/wiki/js_vars
-				 */
-				foreach ( $args['js_vars'] as $js_vars ) {
+				// Handle typography fields
+				if ( isset( $args['type'] ) && 'typography' == $args['type'] ) {
 					/**
-					 * Sanitize the arguments
+					 * Start looping through all the "js_vars" items in the array.
+					 * Documentation on how to use the "js_vars" argument and its syntax
+					 * can be found on https://github.com/aristath/kirki/wiki/js_vars
 					 */
-					$js_vars = array(
-						'element'     => ( isset( $js_vars['element'] ) ) ? sanitize_text_field( $js_vars['element'] ) : '',
-						'function'    => ( isset( $js_vars['function'] ) ) ? esc_js( $js_vars['function'] ) : 'css',
-						'property'    => ( isset( $js_vars['property'] ) ) ? esc_js( $js_vars['property'] ) : '',
-						'units'       => ( isset( $js_vars['units'] ) ) ? esc_js( $js_vars['units'] ) : '',
-						'prefix'      => ( isset( $js_vars['prefix'] ) ) ? esc_js( $js_vars['prefix'] ) : '',
-						'suffix'      => ( isset( $js_vars['suffix'] ) ) ? esc_js( $js_vars['suffix'] ) : '',
-						'js_callback' => ( isset( $js_vars['js_callback'] ) ) ? esc_js( $js_vars['js_callback'] ) : '',
-					);
-					// If 'background-image' is used, then we need to use url("value").
-					if ( 'background-image' == $js_vars['property'] ) {
-						// check that the user hasn't already done this manually using other arguments
-						if ( false === strrpos( $js_vars['prefix'], 'url' ) ) {
-							$js_vars['prefix'] .= 'url("';
-							$js_vars['units']  .= '")';
+					foreach ( $args['js_vars'] as $js_vars ) {
+						if ( ! isset( $js_vars['element'] ) ) {
+							continue;
 						}
+						ob_start();
+						?>
+						wp.customize( '<?php echo $args['settings']; ?>', function( value ) {
+							value.bind( function( newval ) {
+								if ( undefined !== newval['font-size'] ) {
+									jQuery( '<?php echo $js_vars['element']; ?>' ).each( function() {
+										this.style.setProperty( 'font-size', newval['font-size'] );
+									} );
+								}
+								if ( undefined !== newval['line-height'] ) {
+									jQuery( '<?php echo $js_vars['element']; ?>' ).each( function() {
+										this.style.setProperty( 'line-height', newval['line-height'] );
+									} );
+								}
+								if ( undefined !== newval['letter-spacing'] ) {
+									jQuery( '<?php echo $js_vars['element']; ?>' ).each( function() {
+										this.style.setProperty( 'letter-spacing', newval['letter-spacing'] );
+									} );
+								}
+								if ( undefined !== newval['color'] ) {
+									jQuery( '<?php echo $js_vars['element']; ?>' ).each( function() {
+										this.style.setProperty( 'color', newval['color'] );
+									} );
+								}
+							} );
+						} );
+						<?php
+						$script .= ob_get_clean();
+
 					}
 
-					$settings    = $args['settings'];
-					$prefix      = ( ! empty( $js_vars['prefix'] ) ) ? $js_vars['prefix'] . ' + ' : '';
-					$units       = ( ! empty( $js_vars['units'] ) ) ? ' + ' . $js_vars['units'] : '';
-					$suffix      = ( ! empty( $js_vars['suffix'] ) ) ? $js_vars['suffix'] : '';
-					$js_callback = ( ! empty( $js_vars['js_callback'] ) ) ? $js_vars['js_callback'] : '';
-
-					$script .= 'wp.customize( \'' . $settings . '\', function( value ) {';
-					$script .= 'value.bind( function( newval ) {';
-
-					if ( 'html' == $js_vars['function'] ) {
-
-						$script .= '$(\'' . $js_vars['element'] . '\').html( newval );';
-
-						// execute js_callback (callback must exist in dom before this script - see priority on the action/
-						if ( ! empty( $js_callback ) ) {
-							$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
+				} else {
+					/**
+					 * Start looping through all the "js_vars" items in the array.
+					 * Documentation on how to use the "js_vars" argument and its syntax
+					 * can be found on https://github.com/aristath/kirki/wiki/js_vars
+					 */
+					foreach ( $args['js_vars'] as $js_vars ) {
+						/**
+						 * Sanitize the arguments
+						 */
+						$js_vars = array(
+							'element'     => ( isset( $js_vars['element'] ) ) ? sanitize_text_field( $js_vars['element'] ) : '',
+							'function'    => ( isset( $js_vars['function'] ) ) ? esc_js( $js_vars['function'] ) : 'css',
+							'property'    => ( isset( $js_vars['property'] ) ) ? esc_js( $js_vars['property'] ) : '',
+							'units'       => ( isset( $js_vars['units'] ) ) ? esc_js( $js_vars['units'] ) : '',
+							'prefix'      => ( isset( $js_vars['prefix'] ) ) ? esc_js( $js_vars['prefix'] ) : '',
+							'suffix'      => ( isset( $js_vars['suffix'] ) ) ? esc_js( $js_vars['suffix'] ) : '',
+							'js_callback' => ( isset( $js_vars['js_callback'] ) ) ? esc_js( $js_vars['js_callback'] ) : '',
+						);
+						// If 'background-image' is used, then we need to use url("value").
+						if ( 'background-image' == $js_vars['property'] ) {
+							// check that the user hasn't already done this manually using other arguments
+							if ( false === strrpos( $js_vars['prefix'], 'url' ) ) {
+								$js_vars['prefix'] .= 'url("';
+								$js_vars['units']  .= '")';
+							}
 						}
 
-					} else if ( 'style' == $js_vars['function'] ) {
+						$settings    = $args['settings'];
+						$prefix      = ( ! empty( $js_vars['prefix'] ) ) ? $js_vars['prefix'] . ' + ' : '';
+						$units       = ( ! empty( $js_vars['units'] ) ) ? ' + ' . $js_vars['units'] : '';
+						$suffix      = ( ! empty( $js_vars['suffix'] ) ) ? $js_vars['suffix'] : '';
+						$js_callback = ( ! empty( $js_vars['js_callback'] ) ) ? $js_vars['js_callback'] : '';
 
-						$styleID = uniqid( 'kirki-style-' );
+						$script .= 'wp.customize( \'' . $settings . '\', function( value ) {';
+						$script .= 'value.bind( function( newval ) {';
 
-						// append unique style tag if not exist
-						$script .= 'if( !$(\'#' . $styleID . '\').size() ) {';
-						$script .= '$(\'head\').append(\'<style id="' . $styleID . '"></style>\');';
-						$script .= '}';
+						if ( 'html' == $js_vars['function'] ) {
 
-						// if we have new value, replace style contents with custom css
-						$script .= 'if( newval !== \'\') {';
-						$script .= '$(\'#' . $styleID . '\').text(\'' . $js_vars['element'] . '{ ' . $js_vars['property'] . ':' . $prefix . '\' + newval + \'' . $units . $suffix . ';}\');';
+							$script .= '$(\'' . $js_vars['element'] . '\').html( newval );';
 
-						// else let's clear it out
-						$script .= '}else{';
-						$script .= '$(\'#' . $styleID . '\').text(\'\');';
-						$script .= '}';
+							// execute js_callback (callback must exist in dom before this script - see priority on the action/
+							if ( ! empty( $js_callback ) ) {
+								$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
+							}
 
-						// execute js_callback (callback must exist in dom before this script - see priority on line 41
-						if ( ! empty( $js_callback ) ) {
-							$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
-						}
+						} else if ( 'style' == $js_vars['function'] ) {
 
-					} else {
-						$units  = ( ! empty( $js_vars['units'] ) ) ? " + '" . $js_vars['units'] . "'" : '';
-						$prefix = ( ! empty( $js_vars['prefix'] ) ) ? "'" . $js_vars['prefix'] . "' + " : '';
+							$styleID = uniqid( 'kirki-style-' );
 
-						// append inline css - rules are very strict
-						if ( ' !important' === $suffix || '!important' === $suffix ) {
-							// this.style.setProperty( 'color', 'red', 'important' ); - jquery won't fix .css !important issue so we go oldschool
-							$script .= '$(\'' . $js_vars['element'] . '\').each(function(){ this.style.setProperty(\'' . $js_vars['property'] . '\', ' . $prefix . 'newval' . $units . ', \'important\');});';
+							// append unique style tag if not exist
+							$script .= 'if( !$(\'#' . $styleID . '\').size() ) {';
+							$script .= '$(\'head\').append(\'<style id="' . $styleID . '"></style>\');';
+							$script .= '}';
+
+							// if we have new value, replace style contents with custom css
+							$script .= 'if( newval !== \'\') {';
+							$script .= '$(\'#' . $styleID . '\').text(\'' . $js_vars['element'] . '{ ' . $js_vars['property'] . ':' . $prefix . '\' + newval + \'' . $units . $suffix . ';}\');';
+
+							// else let's clear it out
+							$script .= '}else{';
+							$script .= '$(\'#' . $styleID . '\').text(\'\');';
+							$script .= '}';
+
+							// execute js_callback (callback must exist in dom before this script - see priority on line 41
+							if ( ! empty( $js_callback ) ) {
+								$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
+							}
+
 						} else {
-							// $suffix = what other suffix exists inline?
-							$script .= '$(\'' . $js_vars['element'] . '\').' . $js_vars['function'] . '(\'' . $js_vars['property'] . '\', ' . $prefix . 'newval' . $units . $js_vars['suffix'] . ' );';
+							$units  = ( ! empty( $js_vars['units'] ) ) ? " + '" . $js_vars['units'] . "'" : '';
+							$prefix = ( ! empty( $js_vars['prefix'] ) ) ? "'" . $js_vars['prefix'] . "' + " : '';
+
+							// append inline css - rules are very strict
+							if ( ' !important' === $suffix || '!important' === $suffix ) {
+								// this.style.setProperty( 'color', 'red', 'important' ); - jquery won't fix .css !important issue so we go oldschool
+								$script .= '$(\'' . $js_vars['element'] . '\').each(function(){ this.style.setProperty(\'' . $js_vars['property'] . '\', ' . $prefix . 'newval' . $units . ', \'important\');});';
+							} else {
+								// $suffix = what other suffix exists inline?
+								$script .= '$(\'' . $js_vars['element'] . '\').' . $js_vars['function'] . '(\'' . $js_vars['property'] . '\', ' . $prefix . 'newval' . $units . $js_vars['suffix'] . ' );';
+							}
+
+							// execute js_callback (callback must exist in dom before this script - see priority on action
+							if ( ! empty( $js_callback ) ) {
+								$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
+							}
+
 						}
 
-						// execute js_callback (callback must exist in dom before this script - see priority on action
-						if ( ! empty( $js_callback ) ) {
-							$script .= $js_callback . '(\'' . $js_vars['element'] . '\', newval);'; // js_callback(element, newval);
-						}
+						$script .= '}); });';
 
 					}
-
-					$script .= '}); });';
 
 				}
 

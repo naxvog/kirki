@@ -1412,24 +1412,18 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 			// add the value to the array and set the setting's value
 			value['font-size'] = jQuery( this ).val();
 			control.setting.set( value );
-			// refresh the preview
-			wp.customize.previewer.refresh();
 		});
 
 		this.container.on( 'change', '.line-height input', function() {
 			// add the value to the array and set the setting's value
 			value['line-height'] = jQuery( this ).val();
 			control.setting.set( value );
-			// refresh the preview
-			wp.customize.previewer.refresh();
 		});
 
 		this.container.on( 'change', '.letter-spacing input', function() {
 			// add the value to the array and set the setting's value
 			value['letter-spacing'] = jQuery( this ).val();
 			control.setting.set( value );
-			// refresh the preview
-			wp.customize.previewer.refresh();
 		});
 
 		var picker = this.container.find ( '.kirki-color-control' );
@@ -1437,10 +1431,8 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 			change: function() {
 				setTimeout ( function() {
 					// add the value to the array and set the setting's value
-					compiled_value[ 'color' ] = picker.val ();
-					control.setting.set ( compiled_value );
-					// refresh the preview
-					wp.customize.previewer.refresh ();
+					value[ 'color' ] = picker.val();
+					control.setting.set ( value );
 				}, 100 );
 			}
 		} );

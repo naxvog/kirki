@@ -608,6 +608,11 @@ if ( ! class_exists( 'Kirki_Field' ) ) {
 			// Try to auto-calculate these.
 			$js_vars = array();
 			if ( empty ( $this->js_vars ) && ! empty( $this->output ) ) {
+				if ( 'typography' == $this->type ) {
+					$this->js_vars = $this->output;
+					$this->transport = 'postMessage';
+					return;
+				}
 				$easy_css_properties = array(
 					// 'align-content',
 					// 'align-items',
