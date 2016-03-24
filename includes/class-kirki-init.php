@@ -74,6 +74,7 @@ if ( ! class_exists( 'Kirki_Init' ) ) {
 			$wp_customize->register_control_type( 'Kirki_Controls_Custom_Control' );
 			$wp_customize->register_control_type( 'Kirki_Controls_Dashicons_Control' );
 			$wp_customize->register_control_type( 'Kirki_Controls_Dimension_Control' );
+			$wp_customize->register_control_type( 'Kirki_Controls_Gradient_Control' );
 			$wp_customize->register_control_type( 'Kirki_Controls_Number_Control' );
 			$wp_customize->register_control_type( 'Kirki_Controls_Radio_Control' );
 			$wp_customize->register_control_type( 'Kirki_Controls_Radio_Buttonset_Control' );
