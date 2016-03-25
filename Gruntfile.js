@@ -84,6 +84,17 @@ module.exports = function(grunt) {
 		clean: [
 			'assets/json/webfonts.json'
 		],
+		// search and replace google fonts links http to https
+		replace: {
+			googlefonts: {
+				src: ['assets/json/webfonts.php'],
+				dest: 'assets/json/webfonts.php',
+				replacements: [{
+					from: 'http://fonts.gstatic.com',
+					to: 'https://fonts.gstatic.com'
+				}]
+			}
+		},
 		// Watch task (run with "grunt watch")
   		watch: {
 			css: {
@@ -111,8 +122,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 	grunt.loadNpmTasks('grunt-json2php');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-text-replace');
 
 	grunt.registerTask('default', ['sass', 'concat', 'uglify', 'cssmin', 'makepot', 'wp_readme_to_markdown']);
-	grunt.registerTask('googlefonts', ['curl:google-fonts-source', 'json2php', 'clean']);
+	grunt.registerTask('googlefonts', ['curl:google-fonts-source', 'json2php', 'clean', 'replace']);
 
 };
