@@ -140,6 +140,33 @@ input[type="text"] {
   background-repeat: no-repeat;
   background-position: center center; }
 
+.kirki-reset-section {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #FFCDD2;
+  color: #fff;
+  font-size: .8rem;
+  border-radius: 3px;
+  padding: 0 5px;
+  -webkit-transition: background .2s ease;
+  -moz-transition: background .2s ease;
+  -ms-transition: background .2s ease;
+  -o-transition: background .2s ease;
+  transition: background .2s ease; }
+  .kirki-reset-section .dashicons {
+    font-size: .8rem;
+    width: .8rem;
+    height: .8rem;
+    line-height: .8rem;
+    vertical-align: baseline; }
+  .kirki-reset-section:hover, .kirki-reset-section:active {
+    background: #F44336;
+    color: #fff; }
+  .kirki-reset-section:focus {
+    -webkit-box-shadow: 0 0 0 1px #F44336, 0 0 2px 1px rgba(200, 50, 30, 0.8);
+    box-shadow: 0 0 0 1px #F44336, 0 0 2px 1px rgba(200, 50, 30, 0.8); }
+
 #customize-theme-controls .control-panel.control-panel-kirki-expanded > ul.control-panel-content {
   position: relative;
   left: 0;
@@ -1273,10 +1300,10 @@ span.CodeMirror-selectedtext {
     display: block;
     margin-bottom: 1rem;
     position: relative;
-    text-indent: 100%;
     transition: left 0.15s ease-out;
     height: 2rem;
-    width: 4rem; }
+    width: 4rem;
+    font-family: Monaco, "Lucida Sans Typewriter", "Lucida Typewriter", "Courier New", Courier, monospace; }
     .customize-control-switch .switch label:after {
       background: #FFFFFF;
       content: "";
@@ -1286,15 +1313,11 @@ span.CodeMirror-selectedtext {
       position: absolute;
       top: .25rem;
       width: 1.5rem;
-      -webkit-transition: left 0.15s ease-out;
-      -moz-transition: left 0.15s ease-out;
-      -o-transition: translate3d(0, 0, 0);
-      transition: left 0.15s ease-out;
-      -webkit-transform: translate3d(0, 0, 0);
-      -moz-transform: translate3d(0, 0, 0);
-      -ms-transform: translate3d(0, 0, 0);
-      -o-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0); }
+      -webkit-transition: all .25s ease-in-out;
+      -moz-transition: all .25s ease-in-out;
+      -ms-transition: all .25s ease-in-out;
+      -o-transition: all .25s ease-in-out;
+      transition: all .25s ease-in-out; }
   .customize-control-switch .switch input {
     left: 10px;
     opacity: 0;
@@ -1315,20 +1338,17 @@ span.CodeMirror-selectedtext {
       border-radius: 2rem; }
       .customize-control-switch .switch.round label:after {
         border-radius: 2rem; }
-.customize-control-switch .switch-on {
-  position: absolute;
-  left: -55px;
-  top: 8px;
-  color: white;
-  font-weight: bold;
-  font-size: 9px; }
+.customize-control-switch .switch-on,
 .customize-control-switch .switch-off {
-  position: absolute;
-  left: -25px;
-  top: 8px;
-  color: white;
+  line-height: 32px;
   font-weight: bold;
-  font-size: 9px; }
+  padding: 0 10px; }
+.customize-control-switch .switch-on {
+  color: #fff;
+  padding-right: 5px; }
+.customize-control-switch .switch-off {
+  color: #777;
+  padding-left: 5px; }
 
 .customize-control-kirki-generic textarea {
   width: 100%;
