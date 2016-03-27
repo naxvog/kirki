@@ -85,6 +85,29 @@ module.exports = function(grunt) {
 		clean: [
 			'assets/json/webfonts.json'
 		],
+		shell: {
+			multiple: {
+				command: [
+					'rm -rf ../kirki-svn',
+					'mkdir ../kirki-svn',
+					'cd ..',
+					'svn co https://plugins.svn.wordpress.org/kirki kirki-svn',
+					'cd kirki-svn',
+					'rm -rf trunk',
+					'cp -rf ../kirki trunk',
+					'rm -rf trunk/.*',
+					'rm -rf node_modules',
+					'svn rm $( svn status | sed -e \'/^!/!d\' -e \'s/^!//\' )',
+					'svn add * --force',
+					'svn ci -m "auto-pushed from grunt"',
+					'cd ../kirki',
+					'rm -rf ../kirki-svn',
+				].join('&&'),
+				options: {
+					failOnError: false
+				}
+			}
+		},
 		// Watch task (run with "grunt watch")
   		watch: {
 			css: {
@@ -112,8 +135,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 	grunt.loadNpmTasks('grunt-json2php');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-shell');
 
 	grunt.registerTask('default', ['sass', 'concat', 'uglify', 'cssmin', 'makepot', 'wp_readme_to_markdown']);
 	grunt.registerTask('googlefonts', ['curl:google-fonts-source', 'json2php', 'clean']);
+	grunt.registerTask('deploy', ['shell']);
 
 };
