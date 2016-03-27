@@ -27,16 +27,6 @@ if ( ! class_exists( 'Kirki_Controls_Gradient_Control' ) ) {
 			parent::to_json();
 		}
 
-		protected function render() {
-			$id    = 'customize-control-' . str_replace( '[', '-', str_replace( ']', '', $this->id ) );
-			$class = 'customize-control customize-control-' . $this->type; ?>
-			<li id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $class ); ?>">
-				<?php $this->render_content(); ?>
-			</li>
-		<?php }
-
-		public function render_content() {}
-
 		public function content_template() { ?>
 			<# if ( data.tooltip ) { #>
 				<a href="#" class="tooltip hint--left" data-hint="{{ data.tooltip }}"><span class='dashicons dashicons-info'></span></a>
@@ -49,7 +39,7 @@ if ( ! class_exists( 'Kirki_Controls_Gradient_Control' ) ) {
 					<span class="description customize-control-description">{{ data.description }}</span>
 				<# } #>
 
-				<# for ( i = 0; i < data.choices['colors']; i++ ) {  #>
+				<# for ( i = 0; i < 2; i++ ) {  #>
 					<?php // Add the color control ?>
 					<input type="text" data-default-color="{{ data.default[ i ]['color'] }}" data-alpha="true" value="{{ data.value[ i ]['color'] }}" class="kirki-gradient-color-control-{{ i }} color-picker" {{{ data.link }}} />
 					<?php // Add the position control ?>
