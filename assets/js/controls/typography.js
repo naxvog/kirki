@@ -29,12 +29,12 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 				jQuery( subSelector ).selectize()[0].selectize.destroy();
 			}
 			// Get all items in the sub-list for the active font-family
-			for ( var i = 0, len = kirkiAllFonts.length; i < len; i++ ) {
-				if ( fontFamily === kirkiAllFonts[ i ]['family'] ) {
-					if ( undefined !== kirkiAllFonts[ i ]['is_standard'] && true === kirkiAllFonts[ i ]['is_standard'] ) {
+			for ( var i = 0, len = kirkiVars.fonts.length; i < len; i++ ) {
+				if ( fontFamily === kirkiVars.fonts[ i ]['family'] ) {
+					if ( undefined !== kirkiVars.fonts[ i ]['is_standard'] && true === kirkiVars.fonts[ i ]['is_standard'] ) {
 						is_standard = true;
 					}
-					subList = kirkiAllFonts[ i ][ sub + 's' ]; // the 's' is for plural (variant/variants, subset/subsets)
+					subList = kirkiVars.fonts[ i ][ sub + 's' ]; // the 's' is for plural (variant/variants, subset/subsets)
 				}
 			}
 			if ( false === is_standard || 'subset' !== sub ) {
@@ -123,7 +123,7 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 
 		// Render the font-family
 		jQuery( fontFamilySelector ).selectize({
-			options:     kirkiAllFonts,
+			options:     kirkiVars.fonts,
 			items:       [ control.setting._value['font-family'] ],
 			persist:     false,
 			maxItems:    1,

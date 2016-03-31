@@ -41,7 +41,7 @@ if ( ! class_exists( 'Kirki_Panel' ) ) {
 				'title'           => $args['title'], // already escaped in WP Core
 				'priority'        => absint( $args['priority'] ),
 				'description'     => $args['description'], // already escaped in WP Core
-				'active_callback' => $args['active_callback'],
+				// 'active_callback' => $args['active_callback'],
 			) ) );
 
 			// If we've got an icon then call the object to create its script.

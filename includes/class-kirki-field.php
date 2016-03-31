@@ -406,7 +406,7 @@ if ( ! class_exists( 'Kirki_Field' ) ) {
 		protected function set_active_callback() {
 
 			if ( ! empty( $this->required ) ) {
-				$this->active_callback = array( 'Kirki_Active_Callback', 'evaluate' );
+				// $this->active_callback = array( 'Kirki_Active_Callback', 'evaluate' );
 				return;
 			}
 			// No need to proceed any further if we're using the default value

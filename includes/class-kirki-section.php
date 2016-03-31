@@ -34,7 +34,7 @@ if ( ! class_exists( 'Kirki_Section' ) ) {
 				'priority'        => absint( $args['priority'] ),
 				'panel'           => sanitize_key( $args['panel'] ),
 				'description'     => $args['description'], // already escaped in WP Core
-				'active_callback' => $args['active_callback'],
+				// 'active_callback' => $args['active_callback'],
 			) ) );
 
 			if ( isset( $args['icon'] ) ) {

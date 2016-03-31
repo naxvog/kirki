@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'Kirki_Enqueue' ) ) {
+
 	class Kirki_Enqueue {
 
 		public function __construct() {
@@ -118,8 +119,21 @@ if ( ! class_exists( 'Kirki_Enqueue' ) ) {
 				);
 			}
 			$final = array_merge( $standard_fonts_final, $google_fonts_final );
-			wp_localize_script( 'kirki-customizer-js', 'kirkiAllFonts', $final );
+			$vars['fonts'] = $final;
+
+			$depends_fields = array();
+			$fields = Kirki::$fields;
+			foreach ( $fields as $field ) {
+				if ( isset( $field['required'] ) && ! empty( $field['required'] ) ) {
+					$depends_fields[ $field['settings'] ] = $field['required'];
+				}
+			}
+			$vars['dependencies'] = $depends_fields;
+
+			wp_localize_script( 'kirki-customizer-js', 'kirkiVars', $vars );
+
 		}
+
 		public function branding() {
 
 			$config = apply_filters( 'kirki/config', array() );
@@ -154,4 +168,5 @@ if ( ! class_exists( 'Kirki_Enqueue' ) ) {
 		}
 
 	}
+
 }

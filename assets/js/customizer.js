@@ -276,6 +276,8 @@ function kirkiSetValue( setting, value ) {
 wp.customize.controlConstructor['kirki-checkbox'] = wp.customize.Control.extend( {
 	ready: function() {
 		var control = this;
+		// initial state for required fields
+		kirkiRequired( control, control.setting._value );
 
 		// Get the initial value
 		var checkbox_value = control.setting._value;
@@ -283,6 +285,8 @@ wp.customize.controlConstructor['kirki-checkbox'] = wp.customize.Control.extend(
 		this.container.on( 'change', 'input', function() {
 			checkbox_value = ( jQuery( this ).is( ':checked' ) ) ? true : false;
 			control.setting.set( checkbox_value );
+			// trigger required fields changes
+			kirkiRequired( control, checkbox_value );
 		});
 	}
 });
@@ -1302,6 +1306,7 @@ wp.customize.controlConstructor['switch'] = wp.customize.Control.extend( {
 		this.container.on( 'change', 'input', function() {
 			checkbox_value = ( jQuery( this ).is( ':checked' ) ) ? true : false;
 			control.setting.set( checkbox_value );
+			kirkiRequired( control, checkbox_value );
 		});
 	}
 });
@@ -1352,12 +1357,12 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 				jQuery( subSelector ).selectize()[0].selectize.destroy();
 			}
 			// Get all items in the sub-list for the active font-family
-			for ( var i = 0, len = kirkiAllFonts.length; i < len; i++ ) {
-				if ( fontFamily === kirkiAllFonts[ i ]['family'] ) {
-					if ( undefined !== kirkiAllFonts[ i ]['is_standard'] && true === kirkiAllFonts[ i ]['is_standard'] ) {
+			for ( var i = 0, len = kirkiVars.fonts.length; i < len; i++ ) {
+				if ( fontFamily === kirkiVars.fonts[ i ]['family'] ) {
+					if ( undefined !== kirkiVars.fonts[ i ]['is_standard'] && true === kirkiVars.fonts[ i ]['is_standard'] ) {
 						is_standard = true;
 					}
-					subList = kirkiAllFonts[ i ][ sub + 's' ]; // the 's' is for plural (variant/variants, subset/subsets)
+					subList = kirkiVars.fonts[ i ][ sub + 's' ]; // the 's' is for plural (variant/variants, subset/subsets)
 				}
 			}
 			if ( false === is_standard || 'subset' !== sub ) {
@@ -1446,7 +1451,7 @@ wp.customize.controlConstructor['typography'] = wp.customize.Control.extend( {
 
 		// Render the font-family
 		jQuery( fontFamilySelector ).selectize({
-			options:     kirkiAllFonts,
+			options:     kirkiVars.fonts,
 			items:       [ control.setting._value['font-family'] ],
 			persist:     false,
 			maxItems:    1,
@@ -1577,3 +1582,81 @@ jQuery(document).ready(function($) { "use strict";
 
 
 });
+function kirkiRequired( control, value, init ) {
+
+	if ( undefined !== kirkiVars.dependencies ) {
+
+		jQuery.each( kirkiVars.dependencies, function( setting, deps ) {
+
+			jQuery.each( deps, function( key, dep ) {
+
+				if ( dep.setting === control.id ) {
+
+					var show = kirkiRequiredDep( value, dep.value, dep.operator )
+
+					if ( false == show ) {
+						setTimeout( function() {
+							wp.customize.control( setting ).deactivate();
+						}, 3000 );
+					} else {
+						wp.customize.control( setting ).activate();
+					}
+
+				}
+
+			});
+
+		});
+	}
+
+}
+
+function kirkiRequiredDep( value, depValue, operator ) {
+	var show = true;
+	if ( '==' === operator || 'equals' === operator || 'equal' === operator || '=' === operator ) {
+		if ( value != depValue ) {
+			show = false;
+		}
+	} else if ( '===' === operator ) {
+		if ( value !== depValue ) {
+			show = false;
+		}
+	} else if ( '!==' === operator ) {
+		if ( value === depValue ) {
+			show = false;
+		}
+	} else if ( '!=' === operator || 'not equal' === operator ) {
+		if ( value == depValue ) {
+			show = false;
+		}
+	} else if ( '>=' === operator || 'greater or equal' === operator || 'equal or greater' === operator ) {
+		if ( value < depValue ) {
+			show = false;
+		}
+	} else if ( '<=' === operator || 'smaller or equal' === operator || 'equal or smaller' === operator ) {
+		if ( value > depValue ) {
+			show = false;
+		}
+	} else if ( '>' === operator || 'greater' === operator ) {
+		if ( value < depValue ) {
+			show = false;
+		}
+	} else if ( '<' === operator || 'smaller' === operator ) {
+		if ( value > depValue ) {
+			show = false;
+		}
+	} else if ( 'in' === operator || 'contains' === operator ) {
+		if ( 'string' === typeof value ) {
+			if ( value.indexOf( depValue ) == -1 ) {
+				show = false;
+			}
+		} else if ( 'array' === typeof value || 'object' === typeof value ) {
+			if ( undefined === value[ depValue ] ) {
+				show = false;
+			}
+		}
+	}
+
+	return show;
+
+}

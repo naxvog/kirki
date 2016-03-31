@@ -24,7 +24,8 @@ module.exports = function(grunt) {
 				src: [
 					'assets/js/functions.js',
 					'assets/js/controls/*.js',
-					'assets/js/reset.js'
+					'assets/js/reset.js',
+					'assets/js/depends.js'
 				],
 				dest: 'assets/js/customizer.js',
 			},

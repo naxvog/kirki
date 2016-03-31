@@ -11,6 +11,7 @@ wp.customize.controlConstructor['switch'] = wp.customize.Control.extend( {
 		this.container.on( 'change', 'input', function() {
 			checkbox_value = ( jQuery( this ).is( ':checked' ) ) ? true : false;
 			control.setting.set( checkbox_value );
+			kirkiRequired( control, checkbox_value );
 		});
 	}
 });
