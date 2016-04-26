@@ -1,7 +1,4 @@
-/**
- * KIRKI CONTROL: TYPOGRAPHY
- */
-wp.customize.controlConstructor.typography = wp.customize.Control.extend({
+wp.customize.controlConstructor['kirki-typography'] = wp.customize.Control.extend({
 
 	ready: function() {
 

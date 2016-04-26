@@ -1,7 +1,4 @@
-/**
- * KIRKI CONTROL: EDITOR
- */
-wp.customize.controlConstructor.editor = wp.customize.Control.extend({
+wp.customize.controlConstructor['kirki-editor'] = wp.customize.Control.extend({
 
 	// When we're finished loading continue processing
 	ready: function() {
