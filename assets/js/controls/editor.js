@@ -7,30 +7,26 @@ wp.customize.controlConstructor['kirki-editor'] = wp.customize.Control.extend({
 
 		jQuery( window ).load( function() {
 
-			var element    = control.container.find( 'textarea.wp-editor-area' ),
-				textareaID = element.attr( 'id' ),
-				editor     = tinyMCE.get( textareaID ),
-				setChange,
-				content;
+			var element,
+					editor,
+					setChange,
+					content,
+					toggler = control.container.find( 'a.button' );
 
-			if ( editor ) {
-				editor.onChange.add( function( ed, e ) {
-					ed.save();
-					content = editor.getContent();
-					clearTimeout( setChange );
-					setChange = setTimeout( function() {
-						element.val( content ).trigger( 'change' );
-					}, 500 );
-				});
-			}
+			toggler.on( 'click', function() {
 
-			element.css({ visibility: 'visible' }).on( 'keyup', function() {
-				content = element.val();
-				clearTimeout( setChange );
-				setChange = setTimeout( function() {
-					content.trigger( 'change' );
-				}, 500 );
+				// TODO: Add the control ID to the textarea.
+
+				// Show/Hide the editor.
+				jQuery( '#kirki-editor-editor-pane' ).toggleClass( 'show' );
+
+				// TODO: Init tinyMCE.
+
+				// TODO: Put the content in tinyMCE.
+
 			});
+
+			// TODO: Detect changes and save.
 
 		});
 

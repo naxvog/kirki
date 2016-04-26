@@ -1,0 +1,8 @@
+#kirki-editor-editor-pane {
+  position: absolute;
+  bottom: -100vh;
+  width: 100%;
+  &.show {
+    bottom: 0;
+  }
+}

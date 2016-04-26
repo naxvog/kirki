@@ -17,6 +17,26 @@ if ( ! class_exists( 'Kirki_Field_Editor' ) ) {
 	class Kirki_Field_Editor extends Kirki_Field {
 
 		/**
+		 * Constructor.
+		 * Since editor fields only work properly if there's a single tinyMCE instance
+		 * We'll be adding a global editor using the add_editor method.
+		 *
+		 * @access public
+		 * @param string $config_id    The ID of the config we want to use.
+		 *                             Defaults to "global".
+		 *                             Configs are handled by the Kirki_Config class.
+		 * @param array  $args         The arguments of the field.
+		 */
+		public function __construct( $config_id = 'global', $args = array() ) {
+
+			// Call the parent-class constructor.
+			parent::__construct( $config_id, $args );
+
+			// Add the editor.
+			add_action( 'customize_controls_print_footer_scripts', array( $this, 'add_editor' ) );
+		}
+
+		/**
 		 * Sets the control type.
 		 *
 		 * @access protected
@@ -41,6 +61,28 @@ if ( ! class_exists( 'Kirki_Field_Editor' ) ) {
 			}
 			$this->sanitize_callback = 'wp_kses_post';
 
+		}
+
+		/**
+		 * Adds the global textarea
+		 *
+		 * @access public
+		 */
+		public function add_editor() {
+			echo '<div id="kirki-editor-editor-pane">';
+			wp_editor( '', 'kirki-editor', array(
+				'_content_editor_dfw' => false,
+				'drag_drop_upload'    => true,
+				'tabfocus_elements'   => 'content-html,save-post',
+				'editor_height'       => 200,
+				'default_editor'      => 'tinymce',
+				'tinymce'             => array(
+					'resize'             => false,
+					'wp_autoresize_on'   => false,
+					'add_unload_trigger' => false,
+				),
+			) );
+			echo '</div>';
 		}
 	}
 }

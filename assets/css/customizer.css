@@ -587,6 +587,13 @@ span.CodeMirror-selectedtext {
     .customize-control-kirki-color .wp-picker-container a.wp-color-result:focus:after, .customize-control-kirki-color .wp-picker-container a.wp-color-result:hover:after {
       color: #fff; }
 
+#kirki-editor-editor-pane {
+  position: absolute;
+  bottom: -100vh;
+  width: 100%; }
+  #kirki-editor-editor-pane.show {
+    bottom: 0; }
+
 .customize-control-kirki-multicolor .multicolor-group-wrapper {
   display: flex; }
   .customize-control-kirki-multicolor .multicolor-group-wrapper .multicolor-single-color-wrapper {
